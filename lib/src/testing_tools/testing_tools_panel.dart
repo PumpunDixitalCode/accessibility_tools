@@ -68,9 +68,9 @@ class _TestingToolsPanelState extends State<TestingToolsPanel> {
                       SliderTile(
                         label: '''Escala de texto: ${textScaleFactor.scale(1.0).toStringAsFixed(1)}''',
                         info: '''Cambia la escala del texto en la aplicación''',
-                        value: textScaleFactor.scale(1.2),
+                        value: textScaleFactor.scale(1.0),
                         min: 1.2,
-                        max: 1.7,
+                        max: 10.0,
                         onChanged: (value) {
                           this.textScaleFactor = value;
                           _notifyTestEnvironmentChanged();
@@ -125,23 +125,34 @@ class Toolbar extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(left: 8, top: 8, right: 8),
       padding: const EdgeInsets.all(8),
-      child: Row(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          IconButton(
-            icon: const Icon(Icons.close),
-            tooltip: 'Cerrar',
-            onPressed: onClose,
+          Row(
+            children: [
+              IconButton(
+                icon: const Icon(Icons.close),
+                tooltip: 'Cerrar',
+                onPressed: onClose,
+              ),
+              Expanded(
+                child: Text(
+                  'Herramienas de accesibilidad',
+                  style: Theme.of(context).textTheme.titleLarge,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
           ),
-          Expanded(
-            child: Text(
-              'Herramienas de accesibilidad',
-              style: Theme.of(context).textTheme.titleLarge,
-              textAlign: TextAlign.center,
-            ),
-          ),
-          TextButton(
-            onPressed: onResetAll,
-            child: const Text('Valores por defecto', style: TextStyle(color: Colors.black)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: onResetAll,
+                child: const Text('Valores por defecto', style: TextStyle(color: Colors.black)),
+              ),
+            ],
           ),
         ],
       ),

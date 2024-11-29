@@ -46,19 +46,28 @@ class MultiValueToggle<T> extends StatelessWidget {
           runSpacing: 8,
           children: [
             ChoiceChip(
-              selectedColor: const Color(0xff0388D3),
+              selectedColor: const Color.fromRGBO(3, 136, 211, 1),
               surfaceTintColor: Colors.white,
-              backgroundColor: Colors.white,
+              backgroundColor: const Color(0xff838383),
               showCheckmark: false,
-              label: Text(nameBuilder(null)),
+              label: Text(
+                nameBuilder(null),
+                style: const TextStyle(color: Colors.white),
+              ),
               selected: value == null,
               onSelected: (value) => onTap(null),
             ),
             ...values.map((e) {
               return ChoiceChip(
+                selectedColor: const Color.fromRGBO(3, 136, 211, 1),
+                surfaceTintColor: Colors.white,
+                backgroundColor: const Color(0xff838383),
                 showCheckmark: false,
                 selected: e == value,
-                label: Text(nameBuilder(e)),
+                label: Text(
+                  nameBuilder(e),
+                  style: const TextStyle(color: Colors.white),
+                ),
                 onSelected: (_) => onTap(e),
               );
             }),
