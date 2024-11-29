@@ -18,37 +18,10 @@ class TestingToolsWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mediaQueryData = MediaQuery.of(context).copyWith(
-      textScaler: environment?.textScaleFactor != null
-          ? TextScaler.linear(environment!.textScaleFactor!)
-          : null,
-      boldText: environment?.boldText,
-    );
-
-    final themeData = Theme.of(context).copyWith(
-      platform: environment?.targetPlatform,
-      visualDensity: environment?.visualDensity,
+      textScaler: environment?.textScaleFactor != null ? TextScaler.linear(environment!.textScaleFactor!) : null,
     );
 
     Widget body = child;
-
-    if (environment?.semanticsDebuggerEnabled ?? false) {
-      body = SemanticsDebugger(child: body);
-    }
-
-    if (environment?.textDirection != null) {
-      body = Directionality(
-        textDirection: environment!.textDirection!,
-        child: body,
-      );
-    }
-
-    if (environment?.localeOverride != null) {
-      body = Localizations.override(
-        context: context,
-        locale: environment?.localeOverride,
-        child: body,
-      );
-    }
 
     if (environment?.colorModeSimulation != null) {
       body = ColorModeSimulator(
@@ -60,7 +33,7 @@ class TestingToolsWrapper extends StatelessWidget {
     return MediaQuery(
       data: mediaQueryData,
       child: Theme(
-        data: themeData,
+        data: Theme.of(context),
         child: body,
       ),
     );

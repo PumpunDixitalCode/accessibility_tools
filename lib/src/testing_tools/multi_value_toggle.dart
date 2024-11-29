@@ -46,6 +46,9 @@ class MultiValueToggle<T> extends StatelessWidget {
           runSpacing: 8,
           children: [
             ChoiceChip(
+              selectedColor: const Color(0xff0388D3),
+              surfaceTintColor: Colors.white,
+              backgroundColor: Colors.white,
               showCheckmark: false,
               label: Text(nameBuilder(null)),
               selected: value == null,

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'color_mode_simulation.dart';
 import 'multi_value_toggle.dart';
 import 'slider_toggle.dart';
-import 'switch_toggle.dart';
 import 'test_environment.dart';
 
 /// Testing tools panel widget with various toggles and settings. Changing any
@@ -41,21 +40,11 @@ class _TestingToolsPanelState extends State<TestingToolsPanel> {
   @override
   Widget build(BuildContext context) {
     this.textScaleFactor = widget.environment.textScaleFactor;
-    boldText = widget.environment.boldText;
-    targetPlatform = widget.environment.targetPlatform;
-    visualDensity = widget.environment.visualDensity;
-    localeOverride = widget.environment.localeOverride;
-    textDirection = widget.environment.textDirection;
-    semanticsDebuggerEnabled = widget.environment.semanticsDebuggerEnabled;
     colorModeSimulation = widget.environment.colorModeSimulation;
 
-    final supportedLocales =
-        context.findAncestorWidgetOfExactType<WidgetsApp>()?.supportedLocales ??
-            const [];
     final mediaQuery = MediaQuery.of(context);
-    final textScaleFactor = this.textScaleFactor != null
-        ? TextScaler.linear(this.textScaleFactor!)
-        : mediaQuery.textScaler;
+    final textScaleFactor =
+        this.textScaleFactor != null ? TextScaler.linear(this.textScaleFactor!) : mediaQuery.textScaler;
     const gap = SizedBox(height: 18);
 
     return Stack(
@@ -77,106 +66,20 @@ class _TestingToolsPanelState extends State<TestingToolsPanel> {
                     padding: const EdgeInsets.all(16),
                     children: [
                       SliderTile(
-                        label:
-                            '''Text scale: ${textScaleFactor.scale(1.0).toStringAsFixed(1)}''',
-                        info:
-                            '''Change text scaler value to see how layouts behave with different font sizes''',
-                        value: textScaleFactor.scale(1.0),
-                        min: 0.1,
-                        max: 10.0,
+                        label: '''Escala de texto: ${textScaleFactor.scale(1.0).toStringAsFixed(1)}''',
+                        info: '''Cambia la escala del texto en la aplicación''',
+                        value: textScaleFactor.scale(1.2),
+                        min: 1.2,
+                        max: 1.7,
                         onChanged: (value) {
                           this.textScaleFactor = value;
                           _notifyTestEnvironmentChanged();
                         },
                       ),
                       gap,
-                      if (supportedLocales.isNotEmpty) ...[
-                        MultiValueToggle<Locale>(
-                          title: 'Localization',
-                          info:
-                              '''Force a specific locale found in WidgetsApp''',
-                          value: localeOverride,
-                          onTap: (value) {
-                            localeOverride = value;
-                            _notifyTestEnvironmentChanged();
-                          },
-                          values: supportedLocales.toList(),
-                          nameBuilder: (locale) {
-                            return locale?.toString() ?? 'System';
-                          },
-                        ),
-                      ],
-                      gap,
-                      MultiValueToggle<TextDirection>(
-                        value: textDirection,
-                        info: '''Force a specific text direction''',
-                        onTap: (value) {
-                          textDirection = value;
-                          _notifyTestEnvironmentChanged();
-                        },
-                        title: 'Text direction',
-                        values: TextDirection.values.toList(),
-                        nameBuilder: (value) =>
-                            value?.name.toUpperCase() ?? 'System',
-                      ),
-                      gap,
-                      MultiValueToggle(
-                        value: targetPlatform,
-                        info:
-                            '''Force a specific target platform. This usually changes scrolling behavior, toolbar back button icon, gesture navigation etc''',
-                        onTap: (value) {
-                          targetPlatform = value;
-                          _notifyTestEnvironmentChanged();
-                        },
-                        title: 'Platform',
-                        values: TargetPlatform.values,
-                        nameBuilder: (e) => e?.name ?? 'System',
-                      ),
-                      gap,
-                      MultiValueToggle<VisualDensity>(
-                        title: 'Density',
-                        info:
-                            '''Force a specific visual density supported by Flutter. This may change paddings, margins and icons sizes''',
-                        value: visualDensity,
-                        onTap: (value) {
-                          visualDensity = value;
-                          _notifyTestEnvironmentChanged();
-                        },
-                        values: const [
-                          VisualDensity.standard,
-                          VisualDensity.comfortable,
-                          VisualDensity.compact,
-                        ],
-                        nameBuilder: (e) {
-                          if (e == VisualDensity.standard) {
-                            return 'standard';
-                          } else if (e == VisualDensity.comfortable) {
-                            return 'comfortable';
-                          } else if (e == VisualDensity.compact) {
-                            return 'compact';
-                          } else {
-                            return 'System';
-                          }
-                        },
-                      ),
-                      gap,
-                      MultiValueToggle<bool?>(
-                        value: boldText,
-                        title: 'Bold text',
-                        info:
-                            '''Mimic platform's request to draw texts with a bold font weight''',
-                        onTap: (value) {
-                          boldText = value;
-                          _notifyTestEnvironmentChanged();
-                        },
-                        values: _onOffSystemValues,
-                        nameBuilder: _onOffSystemLabels,
-                      ),
-                      gap,
                       MultiValueToggle<ColorModeSimulation?>(
-                        title: 'Color mode simulation',
-                        info:
-                            '''Simulate a certain color mode to check contrast and colors accessibility''',
+                        title: 'Ayudas visuales',
+                        info: '''Simula diferentes tonalidades de colores para las distintas condiciones de visión''',
                         value: colorModeSimulation,
                         onTap: (value) {
                           colorModeSimulation = value;
@@ -184,28 +87,6 @@ class _TestingToolsPanelState extends State<TestingToolsPanel> {
                         },
                         values: ColorModeSimulation.values,
                         nameBuilder: (e) => e?.name ?? 'Off',
-                      ),
-                      gap,
-                      SwitchToggle(
-                        title: 'Screen reader mode',
-                        info:
-                            '''Use Semantics Debugger to simulate how the app behaves with screen readers''',
-                        value: semanticsDebuggerEnabled ?? false,
-                        onChanged: (value) {
-                          semanticsDebuggerEnabled = value;
-                          _notifyTestEnvironmentChanged();
-                        },
-                      ),
-                      const SizedBox(height: 8),
-                      const Divider(),
-                      const SizedBox(height: 12),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: ElevatedButton.icon(
-                          onPressed: widget.onClose,
-                          icon: const Icon(Icons.close),
-                          label: const Text('Close'),
-                        ),
                       ),
                     ],
                   ),
@@ -222,29 +103,9 @@ class _TestingToolsPanelState extends State<TestingToolsPanel> {
     widget.onEnvironmentUpdate(
       TestEnvironment(
         textScaleFactor: textScaleFactor,
-        boldText: boldText,
-        targetPlatform: targetPlatform,
-        visualDensity: visualDensity,
-        localeOverride: localeOverride,
-        semanticsDebuggerEnabled: semanticsDebuggerEnabled,
-        textDirection: textDirection,
         colorModeSimulation: colorModeSimulation,
       ),
     );
-  }
-}
-
-const _onOffSystemValues = [true, false];
-
-String _onOffSystemLabels(bool? value) {
-  switch (value) {
-    case true:
-      return 'on';
-    case false:
-      return 'off';
-    case null:
-    default:
-      return 'System';
   }
 }
 
@@ -268,19 +129,19 @@ class Toolbar extends StatelessWidget {
         children: [
           IconButton(
             icon: const Icon(Icons.close),
-            tooltip: 'Close',
+            tooltip: 'Cerrar',
             onPressed: onClose,
           ),
           Expanded(
             child: Text(
-              'UI settings',
+              'Herramienas de accesibilidad',
               style: Theme.of(context).textTheme.titleLarge,
               textAlign: TextAlign.center,
             ),
           ),
           TextButton(
             onPressed: onResetAll,
-            child: const Text('Reset all'),
+            child: const Text('Valores por defecto', style: TextStyle(color: Colors.black)),
           ),
         ],
       ),

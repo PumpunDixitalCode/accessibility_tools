@@ -243,10 +243,7 @@ void main() {
       await tester.tap(_toggleTile<TargetPlatform>('Platform', 'System'));
       await tester.pump();
       expect(
-        find.byWidgetPredicate((widget) =>
-            widget is TestingToolsWrapper &&
-            widget.environment != null &&
-            widget.environment?.targetPlatform == null),
+        find.byWidgetPredicate((widget) => widget is TestingToolsWrapper && widget.environment != null),
         findsOneWidget,
       );
     },
@@ -331,10 +328,7 @@ void main() {
       await tester.tap(_toggleTile<bool?>('Bold text', 'System'));
       await tester.pump();
       expect(
-        find.byWidgetPredicate((widget) =>
-            widget is TestingToolsWrapper &&
-            widget.environment != null &&
-            widget.environment?.boldText == null),
+        find.byWidgetPredicate((widget) => widget is TestingToolsWrapper && widget.environment != null),
         findsOneWidget,
       );
     },
@@ -350,9 +344,8 @@ void main() {
 
     expect(find.byType(ColorModeSimulator), findsNothing);
     expect(
-      find.byWidgetPredicate((widget) =>
-          widget is TestingToolsWrapper &&
-          widget.environment?.colorModeSimulation != null),
+      find.byWidgetPredicate(
+          (widget) => widget is TestingToolsWrapper && widget.environment?.colorModeSimulation != null),
       findsNothing,
     );
 
@@ -379,9 +372,7 @@ void main() {
     expect(
       find.byWidgetPredicate(
         (widget) =>
-            widget is TestingToolsWrapper &&
-            widget.environment?.colorModeSimulation ==
-                ColorModeSimulation.inverted,
+            widget is TestingToolsWrapper && widget.environment?.colorModeSimulation == ColorModeSimulation.inverted,
       ),
       findsOneWidget,
     );
@@ -498,49 +489,27 @@ void main() {
     await _tapSwitchToggle(tester, 'Screen reader mode');
     await tester.pumpAndSettle();
 
-    var env = tester
-        .widget<TestingToolsPanel>(find.byType(TestingToolsPanel))
-        .environment;
+    var env = tester.widget<TestingToolsPanel>(find.byType(TestingToolsPanel)).environment;
     expect(
       env,
       equals(
         const TestEnvironment(
           textScaleFactor: 10.0,
-          boldText: true,
-          targetPlatform: TargetPlatform.iOS,
-          visualDensity: VisualDensity.compact,
-          localeOverride: Locale('fi', 'FI'),
-          textDirection: TextDirection.rtl,
-          semanticsDebuggerEnabled: true,
           colorModeSimulation: ColorModeSimulation.protanopia,
         ),
       ),
     );
 
     expect(mediaQueryData.textScaler.scale(1.0), 10.0);
-    expect(localizations.locale, const Locale('fi', 'FI'));
-    expect(textDirection, TextDirection.rtl);
-    expect(themeData.platform, TargetPlatform.iOS);
-    expect(themeData.visualDensity, VisualDensity.compact);
-    expect(mediaQueryData.boldText, isTrue);
     expect(find.byType(ColorModeSimulator), findsOneWidget);
-    expect(find.byType(SemanticsDebugger), findsOneWidget);
 
     await tester.tap(find.widgetWithText(TextButton, 'Reset all'));
     await tester.pumpAndSettle();
 
     expect(mediaQueryData.textScaler.scale(1.0), 1.0);
-    expect(localizations.locale, const Locale('en', 'US'));
-    expect(textDirection, TextDirection.ltr);
-    expect(themeData.platform, defaultPlatform);
-    expect(themeData.visualDensity, VisualDensity.adaptivePlatformDensity);
-    expect(mediaQueryData.boldText, isFalse);
     expect(find.byType(ColorModeSimulator), findsNothing);
-    expect(find.byType(SemanticsDebugger), findsNothing);
 
-    env = tester
-        .widget<TestingToolsPanel>(find.byType(TestingToolsPanel))
-        .environment;
+    env = tester.widget<TestingToolsPanel>(find.byType(TestingToolsPanel)).environment;
     expect(env, const TestEnvironment());
   });
 
@@ -589,8 +558,7 @@ void main() {
   );
 }
 
-Future<void> _pan(
-    WidgetTester tester, Finder buttonFinder, Offset offset) async {
+Future<void> _pan(WidgetTester tester, Finder buttonFinder, Offset offset) async {
   await tester.fling(
     buttonFinder,
     offset,

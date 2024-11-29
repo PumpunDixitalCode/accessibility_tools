@@ -47,11 +47,6 @@ class SliderTile extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 8),
-            OutlinedButton(
-              onPressed: () => onChanged(null),
-              child: const Text('Reset'),
-            ),
           ],
         ),
         const SizedBox.square(dimension: 4),
@@ -61,6 +56,8 @@ class SliderTile extends StatelessWidget {
           max: max,
           divisions: divisions,
           onChanged: onChanged,
+          activeColor: const Color(0xff0388D3),
+          thumbColor: const Color(0xff0388D3),
         ),
       ],
     );
