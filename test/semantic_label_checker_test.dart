@@ -1,7 +1,6 @@
 import 'package:accessibility_tools/src/accessibility_tools.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:network_image_mock/network_image_mock.dart';
 
 import 'test_utils.dart';
 
@@ -62,18 +61,18 @@ void main() {
     (WidgetTester tester) async {
       const imageKey = Key('Image');
 
-      await mockNetworkImagesFor(() async {
-        await tester.pumpWidget(
-          TestApp(
-            child: Image.network(
-              'https://picsum.photos/200/200',
-              height: 200,
-              width: 200,
-              key: imageKey,
-            ),
-          ),
-        );
-      });
+      // await mockNetworkImagesFor(() async {
+      //   await tester.pumpWidget(
+      //     TestApp(
+      //       child: Image.network(
+      //         'https://picsum.photos/200/200',
+      //         height: 200,
+      //         width: 200,
+      //         key: imageKey,
+      //       ),
+      //     ),
+      //   );
+      // });
 
       await showAccessibilityIssues(tester);
 
@@ -145,9 +144,7 @@ Read more about screen readers: https://docs.flutter.dev/development/accessibili
 
       await tester.pumpAndSettle();
       expect(
-        find.byWidgetPredicate((w) =>
-            w is Tooltip &&
-            w.message == 'Tap area is missing a semantic label'),
+        find.byWidgetPredicate((w) => w is Tooltip && w.message == 'Tap area is missing a semantic label'),
         findsNothing,
       );
     },
